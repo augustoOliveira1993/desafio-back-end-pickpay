@@ -50,14 +50,15 @@ class UserService {
         if (userDocumentExists) {
             throw new AppError('Document já cadastrado', 400);
         }
-        await this.repository.create({
+        const userCreated = await this.repository.create({
             ...data,
             document: data.document.replace(/\D/g, '')
         });
 
         return {
             success: true,
-            message: 'Usuário cadastrado com sucesso'
+            message: 'Usuário cadastrado com sucesso',
+            data: await this.repository.show(userCreated.id)
         }
     }
 

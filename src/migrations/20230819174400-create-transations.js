@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Users', {
+        await queryInterface.createTable('Transations', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -13,33 +13,29 @@ module.exports = {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4
             },
-            full_name: {
-                type: Sequelize.STRING,
+            amount: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            document: {
-                type: Sequelize.STRING,
-                unique: true
+            status: {
+                type: Sequelize.ENUM('PENDENTE', 'APROVADA', 'CANCELADA', 'REEMBOLSADA'),
+                defaultValue: 'PENDENTE'
             },
-            email: {
-                type: Sequelize.STRING,
-                unique: true,
-                validate: {
-                    isEmail: true,
-                },
-            },
-            password: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            is_merchant: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-            },
-            balance: {
+            sender_user_id: {
                 type: Sequelize.INTEGER,
-                defaultValue: 0,
-                allowNull: false
+                allowNull: false,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
+            },
+            receiver_user_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                }
             },
             created_at: {
                 allowNull: false,
@@ -52,6 +48,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('Transations');
     }
 };

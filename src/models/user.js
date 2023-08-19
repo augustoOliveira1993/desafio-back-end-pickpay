@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        balance: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
     }, {
         sequelize,
         modelName: 'Users',
