@@ -4,7 +4,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 
-const routes = require('./views/routes');
+const {AppError} = require('./errors/AppError');
+
+const routes = require('./routes');
+const {ValidationError} = require("sequelize");
 require('dotenv').config();
 
 module.exports = class App {
@@ -29,9 +32,24 @@ module.exports = class App {
 
     exceptionHandler() {
         this.server.use(async (err, req, res, next) => {
+            if (err instanceof ValidationError) {
+                return res.status(400).json({
+                    success: false,
+                    message: err.message,
+                    errors: err.errors
+                });
+
+            }
+            if (err instanceof AppError) {
+                return res.status(err.statusCode).json({
+                    success: false,
+                    message: err.message
+                });
+            }
             return res.status(500).json({
-                status: 'error',
-                message: 'Internal server error'
+                success: false,
+                message: 'Error interno do servidor',
+                error: err
             });
         });
     }

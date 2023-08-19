@@ -1,6 +1,6 @@
 const routes = require('express').Router();
 
-const UserController = require('../../controllers/UserController');
+const UserController = require('../controllers/UserController');
 
 routes.get('/', UserController.index);
 routes.get('/:id', UserController.show);
