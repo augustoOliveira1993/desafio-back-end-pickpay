@@ -1,4 +1,4 @@
-const {Users} = require('../models');
+const {Users, Notifications} = require('../models');
 
 class UserRepository {
     constructor() {
@@ -19,7 +19,14 @@ class UserRepository {
 
     async index() {
         return new Promise((resolve, reject) => {
-            this.model.findAll()
+            this.model.findAll({
+                include: [
+                    {
+                        model: Notifications,
+                        as: 'notifications',
+                    },
+                ]
+            })
                 .then((users) => {
                     resolve(users);
                 })
@@ -94,6 +101,42 @@ class UserRepository {
             this.model.findOne({
                 where: {
                     document
+                }
+            })
+                .then((user) => {
+                    resolve(user);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        })
+    }
+
+    async saqueBalance(id, amount) {
+        return new Promise((resolve, reject) => {
+            this.model.update({
+                balance: amount
+            }, {
+                where: {
+                    id
+                }
+            })
+                .then((user) => {
+                    resolve(user);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        })
+    }
+
+    async depositoBalance(id, amount) {
+        return new Promise((resolve, reject) => {
+            this.model.update({
+                balance: amount
+            }, {
+                where: {
+                    id
                 }
             })
                 .then((user) => {
