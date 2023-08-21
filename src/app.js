@@ -32,7 +32,6 @@ module.exports = class App {
 
     exceptionHandler() {
         this.server.use(async (err, req, res, next) => {
-            console.log(err)
             if (err instanceof ValidationError) {
                 return res.status(400).json({
                     success: false,
